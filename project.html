@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<html>
+<head>
+    <title>Rock Paper Scissors - Face Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #video {
+            width: 320px;
+            height: 240px;
+            border: 1px solid black;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock Paper Scissors - Face Recognition</h1>
+
+    <video id="video" autoplay></video>
+    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+
+    <div>
+        <button onclick="captureAndPredict()">Capture & Predict</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+    <script>
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let resultDiv = document.getElementById('result');
+        let model;
+
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        resolve();
+                    };
+                });
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                resultDiv.innerText = 'Error accessing camera: ' + err.message;
+            }
+        }
+
+        async function loadModel() {
+            try {
+                model = await mobilenet.load();
+                console.log('Model loaded');
+            } catch (err) {
+                console.error('Error loading model:', err);
+                resultDiv.innerText = 'Error loading model: ' + err.message;
+            }
+        }
+
+        async function captureAndPredict() {
+            if (!model) {
+                resultDiv.innerText = 'Model not loaded yet.';
+                return;
+            }
+
+            canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+            let tensor = tf.browser.fromPixels(canvas);
+            let predictions = await model.classify(tensor);
+
+            // Basic "AI" - Replace with actual face recognition and gesture detection
+            let aiChoice = ['Rock', 'Paper', 'Scissors'][Math.floor(Math.random() * 3)];
+            resultDiv.innerText = `AI chose: ${aiChoice}. (This is a placeholder - integrate face/gesture recognition here!)`;
+
+            tensor.dispose(); // Clean up memory
+        }
+
+        async function main() {
+            await setupCamera();
+            await loadModel();
+        }
+
+        main();
+    </script>
+</body>
+</html>
