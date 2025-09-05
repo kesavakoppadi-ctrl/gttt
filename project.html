@@ -1,94 +1,195 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
-</head>
-<html>
-<head>
-    <title>Rock Paper Scissors - Face Recognition</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        #video {
-            width: 320px;
-            height: 240px;
-            border: 1px solid black;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rock Paper Scissors game using hand recognition">
+  <meta name="keywords" content="Rock Paper Scissors, Hand Recognition, TensorFlow.js, Machine Learning, Web Development">
+  <meta name="author" content="Yuva Kotipalli">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <title>Rock Paper Scissors - Hand Recognition</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f3f8;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+      text-align: center;
+    }
+
+
+    h1, h2 {
+      margin: 0.5em 0;
+      color:#333
+    }
+    
+    header, footer {
+      background: linear-gradient(to right, #831bcd, #f9620b);
+      color: #f0f3f8;
+      padding: 20px 0;
+    } 
+
+    iframe{
+        border: none; 
+    }
+
+    section {
+      margin: 20px auto;
+      padding:  20px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: 8px   ;
+      max-width: 800px;
+    }
+
+    ul {
+      text-align: left;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    #video {
+      width: 320px;
+      height: 240px;
+      border: 1px solid #333;
+      border-radius: 8px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #222;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #831bcd;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #5e1396;
+    }
+    p
+    {
+        font-size: 16;
+    }
+
+    footer p {
+      margin: 5px 0;
+    }
+
+    footer a {
+      color: #f0f3f8;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h1>Rock Paper Scissors - Face Recognition</h1>
 
-    <video id="video" autoplay></video>
-    <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+  <header>
+    <h1 style="color: #fff">Rock Paper Scissors - Hand Recognition</h1>
+  </header>
 
-    <div>
+  <main>
+    <section>
+      <h2>Instructions</h2>
+      <p style="color: rgb(29, 11, 145); font-size: 16px;">
+        Use your hand gestures to play Rock, Paper, Scissors against the COMPUTER!
+      </p>
+      <ul>
+        <li><strong>Rock:</strong> Make a fist.</li>
+        <li><strong>Paper:</strong> Open your hand flat.</li>
+        <li><strong>Scissors:</strong> Extend your index and middle fingers.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 >Game Area</h2>
+      <p>Allow camera access and use your gestures to play!</p>
+    </section>
+
+    <section>
+      <h2 >Camera Feed</h2>
+      <video id="video" autoplay></video>
+      <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+      <div>
         <button onclick="captureAndPredict()">Capture & Predict</button>
-    </div>
+      </div>
+      <div id="result"></div>
+    </section>
+  </main>
 
-    <div id="result"></div>
+  
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
-    <script>
-        let video = document.getElementById('video');
-        let canvas = document.getElementById('canvas');
-        let resultDiv = document.getElementById('result');
-        let model;
+  <!-- TensorFlow.js + MobileNet -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const resultDiv = document.getElementById('result');
+    let model;
 
-        async function setupCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
-                await new Promise((resolve) => {
-                    video.onloadedmetadata = () => {
-                        resolve();
-                    };
-                });
-            } catch (err) {
-                console.error('Error accessing camera:', err);
-                resultDiv.innerText = 'Error accessing camera: ' + err.message;
-            }
-        }
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+          video.onloadedmetadata = () => resolve();
+        });
+      } catch (err) {
+        console.error('Error accessing camera:', err);
+        resultDiv.innerText = 'Error accessing camera: ' + err.message;
+      }
+    }
 
-        async function loadModel() {
-            try {
-                model = await mobilenet.load();
-                console.log('Model loaded');
-            } catch (err) {
-                console.error('Error loading model:', err);
-                resultDiv.innerText = 'Error loading model: ' + err.message;
-            }
-        }
+    async function loadModel() {
+      try {
+        model = await mobilenet.load();
+        console.log('Model loaded successfully');
+      } catch (err) {
+        console.error('Error loading model:', err);
+        resultDiv.innerText = 'Error loading model: ' + err.message;
+      }
+    }
 
-        async function captureAndPredict() {
-            if (!model) {
-                resultDiv.innerText = 'Model not loaded yet.';
-                return;
-            }
+    async function captureAndPredict() {
+      if (!model) {
+        resultDiv.innerText = 'Model not loaded yet.';
+        return;
+      }
 
-            canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
-            let tensor = tf.browser.fromPixels(canvas);
-            let predictions = await model.classify(tensor);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, 320, 240);
 
-            // Basic "AI" - Replace with actual face recognition and gesture detection
-            let aiChoice = ['Rock', 'Paper', 'Scissors'][Math.floor(Math.random() * 3)];
-            resultDiv.innerText = `AI chose: ${aiChoice}. (This is a placeholder - integrate face/gesture recognition here!)`;
+      const tensor = tf.browser.fromPixels(canvas);
+      const predictions = await model.classify(tensor);
 
-            tensor.dispose(); // Clean up memory
-        }
+      // Placeholder AI choice
+      const aiChoice = ['Rock', 'Paper', 'Scissors'][Math.floor(Math.random() * 3)];
+      resultDiv.innerText = `AI chose: ${aiChoice}. (Placeholder - integrate gesture recognition here!)`;
 
-        async function main() {
-            await setupCamera();
-            await loadModel();
-        }
+      tensor.dispose();
+    }
 
-        main();
-    </script>
+    async function main() {
+      await setupCamera();
+      await loadModel();
+    }
+
+    main();
+  </script>
 </body>
+<footer>
+    <p>&copy; 2024 Yuva Kotipalli. All rights reserved.</p>
+    <p>Contact: <a href="mailto:yuva@example.com">yuva@example.com</a></p>
+  </footer>
 </html>
