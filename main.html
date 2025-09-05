@@ -5,70 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="personal website of yuva">
     <title>yuva's profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styleproject.css">
+
 </head>
 
-
+<center>
 <body>
-    <center>
-    <h1>Welcome to Yuva's Profile</h1>
-    <p>This is a personal website showcasing my work and interests.</p>
-    <p>Feel free to explore and learn more about me!</p>
-   
+        <header>
+            <h1 style="color: #fff">Welcome to Yuva's Profile</h1>
+            <p>This is yuva</p>
+        </header>
     <hr>
 
 
     <section>
         <h2>About Me</h2>
         <p>Hello! I'm Yuva, a passionate developer with a love for creating innovative solutions.</p>
-        <img src="demo.webp" alt="Yuva's Profile Picture" width="300" height="200">
+        <img src="demo.webp" alt="Yuva's Profile Picture">
     </section>
     <hr>
+
     <section>
         <h2>Contact information</h2>
-        <p>If you'd like to get in touch, please reach out via email at <a href="mailto:yuva@gmail.com">yuvakotipalli@gmail.com</a>.</p>
+        <p>lets conect<br></p>
+             <a href="mailto:brucelee9094@gmail.com" class="icon-link email-icon" ><i class ="fas fa-envelope"></i></a>
+             <a href="https://www.linkedin.com" class="icon-link linkedin-icon"><i class="fab fa-linkedin"></i></a>       
     </section>
     <hr>
+
     <section>
         <h2>Projects</h2>
         <p>Here are some of the projects I've worked on:</p>
         <ul>
-            <li>Project 1: <a href="project.html">Description of project 1</a></li>
-            <li>Project 2: <a href="project.html">Description of project 2</a></li>
-            <li>Project 3: <a href="project.html">Description of project 3</a></li>
+            <li> <a href="project.html" target="_blank">Rock paper scissors: </a></li>
+            <li> <a href="project.html" target="_blank">Project 2:</a></li>
+            <li> <a href="project.html" target="_blank">Project 3:</a></li>
         </ul>
     </section>
-    <section>
-        <h2>Skills</h2>
-        <table>
-            <tr>
-                <th>Skill</th>
-                   <td>
-                     <ul>
-                        <li>web development</li>
-                        <li>python</li>
-                        <li>machine learning</li>
-                        <li>data analysis</li>
-
-                     </ul>
-                    </td>                
-            </tr>
-        </table>
-    
-        </ul>
+    <hr>
+    <section class="skills">
+          <h2>Skills</h2>
+          <ul class="skills-list">
+                <li>Web Development</li>
+                <li>Python</li>
+                <li>Machine Learning</li>
+                <li>Data Analysis</li>
+          </ul>
+     </section>
+     <hr>
         <hr>
     <section> 
     <h2>Hobbies</h2>
-        <table>
-            <tr>
-                <td>Coding</td>
-            </tr>
-            <tr>
-                <td>Reading</td>
-            </tr>
-            <tr>
-                <td>Traveling</td>
-            </tr>
-        </table>
+        <ul>
+            <li>Coding</li>
+            <li>Reading</li>
+            <li>Traveling</li>
+        </ul>
         <hr>
     </section>
     <section>
@@ -82,13 +76,14 @@
             <input type="email" id="email" name="email" required><br><br>
 
             <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" cols="22" required></textarea><br><br>
+            <textarea id="message" name="message" rows="4" cols="30" required></textarea><br><br>
 
             <button type="submit">Send</button>
         </form>
     </section>
 
 </body>
+</center>
 <footer>
     <p>&copy; 2025 Yuva. All rights reserved.</p>
 </footer>
